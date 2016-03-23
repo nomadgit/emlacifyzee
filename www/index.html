@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Emlac Baby Feeder</title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/editFeeding.css" rel="stylesheet">
+    <link href="css/charts.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <style type="text/css">
+      .hidden {visibility: hidden;}
+      .forceVisible {visibility: visible;}
+    </style>
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/fileout.js"></script>
+    <script src="lib/chartjs/Chart.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/protos.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/menuController.js"></script>
+    <script src="js/counterController.js"></script>
+    <script src="js/listController.js"></script>
+    <script src="js/chartsController.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/chartData.js"></script>
+
+    <script type="text/javascript">
+      // Fix weird menu-overlay behavior on android 4.1. We only ever run on grade a platforms anyway. =) 
+      ionic.Platform.ready(function(){ionic.Platform.setGrade('a');})
+    </script>
+  </head>
+  <body ng-app="starter">
+
+
+
+  <ion-side-menus>
+
+
+
+    <!-- Center content -->
+    <ion-side-menu-content>
+      <ion-content id="CounterApp" ng-controller="ListCtrl">
+
+        <div class="infoOverlay hidden {{showInfoOverlay ? &apos;forceVisible&apos; : &apos;&apos;}}" ng-show="showInfoOverlay">
+          <div class="infoOverlayInner">
+            <img id="infoArrowLeft" src="img/infoArrowLeft.png">
+            <img id="infoArrowBottle" src="img/infoArrowBottle.png">
+            <img id="infoArrowRight" src="img/infoArrowRight.png">
+            <img id="infoStartFeeding" src="img/infoStartFeeding.png">
+            <img id="infoTextLeft" src="img/infoTextLeft.png">
+            <img id="infoTextBottle" src="img/infoTextBottle.png">
+            <img id="infoTextRight" src="img/infoTextRight.png">
+          </div>
+          <div class="buttonContainer">
+            <button class="button button-round button-info" ng-click="hideInfoOverlay()">Got it. Let me try!</button>
+          </div>
+        </div>
+
+
+        <div class="counter" ng-controller="CounterCtrl">
+          <button menu-toggle="left" class="button button-icon icon ion-navicon button-menu"></button>
+          <div class="ongoing">
+            <span class="duration" ng-show="currentFeeding">{{currentFeeding.duration | date:&apos;m:ss&apos;:&apos;UTC&apos;}}</span>
+            <span class="duration" ng-show="!currentFeeding">0:00</span>
+          </div>
+
+          <div class="suppliers">
+            <button class="button button-round {{lClass}}" id="breastL" ng-click="toggleFeeding(&apos;L&apos;)" ng-bind-html="leftSign"></button> 
+            <button class="button button-round button-bottle" id="bottle" ng-click="bottleFeeding()"><i class="ion-waterdrop"></i></button> 
+            <button class="button button-round {{rClass}}" id="breastR" ng-click="toggleFeeding(&apos;R&apos;)" ng-bind-html="rightSign"></button> 
+          </div>
+        </div>  
+
+        <div class="loadingIndicator" ng-show="loading &gt; 0"><ion-spinner icon="dots"></ion-spinner></div>
+
+        <ion-slide-box on-slide-changed="slideHasChanged($index)" show-pager="false" active-slide="activeSlide">
+          <ion-slide ng-repeat="feedingDay in feedingDays.slice(0,feedingDays.length - 1) track by $index" class="feedingSlide">
+            <ion-list>
+              <div class="day">
+                <i ng-show="$index &gt; 0 &amp;&amp; feedingDays[$index-1]" class="ion-arrow-left-b"></i>
+                {{getDayForSlide($index) | date:&apos;EEEE d MMM&apos;}}
+                <i class="ion-arrow-right-b"></i>
+              </div>
+              <div class="totals">
+                Total
+                <div class="left"><span class="supplier supplierL">L</span>{{getDailyTotal(feedingDay,&apos;L&apos;)| number:0}}&#xA0;min</div>
+                <div class="bottle"><span class="supplier supplierB"><i class="ion-waterdrop"></i></span>{{getDailyTotal(feedingDay,&apos;B&apos;)}}&#xA0;ml</div>
+                <div class="right"><span class="supplier supplierR">R</span>{{getDailyTotal(feedingDay,&apos;R&apos;)| number:0}}&#xA0;min</div>
+              </div>
+              <div ng-show="feedingDay &amp;&amp; feedingDay.length" ng-repeat="feeding in feedingDay"><ng-include src="&apos;list.html&apos;"></ng-include></div>
+              <div ng-show="!feedingDay || !feedingDay.length" class="noFeedings">No feedings this day</div>
+            </ion-list>
+          </ion-slide>
+          <ion-slide class="feedingSlide"> <!-- today is a bit of a special case -->
+            <ion-list ng-show="!showInfoOverlay">
+              <div class="day"><i class="ion-arrow-left-b" ng-show="feedingDays[feedingDays.length-2]"></i> Today</div>
+              <div class="totals">
+                Total
+                <div class="left"><span class="supplier supplierL">L</span>{{getDailyTotal(feedingDays[feedingDays.length-1],&apos;L&apos;)| number:0}}&#xA0;min</div>
+                <div class="bottle"><span class="supplier supplierB"><i class="ion-waterdrop"></i></span>{{getDailyTotal(feedingDays[feedingDays.length-1],&apos;B&apos;)}}&#xA0;ml</div>
+                <div class="right"><span class="supplier supplierR">R</span>{{getDailyTotal(feedingDays[feedingDays.length-1],&apos;R&apos;)| number:0}}&#xA0;min</div>
+              </div>
+              <div ng-show="mostRecentFinishedFeeding" class="times timeSinceLast">
+                <span class="time">{{timeSinceLast}}</span>
+                <p>since last feeding</p>
+              </div>
+              <div ng-repeat="feeding in feedingDays[feedingDays.length-1]"><ng-include src="&apos;list.html&apos;"></ng-include></div>
+            </ion-list>
+          </ion-slide>
+        </ion-slide-box>
+      </ion-content>
+    </ion-side-menu-content>
+
+    <!-- Left menu -->
+    <ion-side-menu side="left">
+      <ion-content ng-controller="MenuCtrl" class="sidemenu">
+        <ion-list>
+          <div class="version">&#xA9; EMLAC Baby Feeder v{{version}}</div>
+          <div class="settings">
+            
+            <ion-item ng-click="toggleVibrate()" class="item item-icon-right">Vibrate every 10 min<i ng-show="vibrateOn" class="icon ion-toggle-filled"></i><i ng-show="!vibrateOn" class="icon ion-toggle"></i></ion-item>
+          </div>
+
+          <div class="tools">
+            
+            <!--<ion-item ng-click="connectDevices()" class="noicon">Connect devices</ion-item>-->
+            <ion-item ng-click="enterCharts()" class="noicon">Statistics</ion-item>
+            
+            <ion-item ng-click="exitApp()" class="noicon">Exit</ion-item>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ion-side-menu>
+
+  </ion-side-menus>
+
+  </body>
+</html>

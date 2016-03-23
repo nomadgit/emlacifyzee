@@ -1,0 +1,26 @@
+<div class="durations" ng-show="feeding.timeAgo">
+  <span class="row">
+    <div class="verticalLine"></div>
+    <span class="col between">{{feeding.timeAgo}}</span>
+    <span class="col"></span>
+  </span>
+</div>
+<div class="times">
+  <span class="row">
+    <div class="verticalLine"></div>
+    <span class="col"></span>
+    <span class="col">
+      <div class="feeding" ng-click="editFeeding(feeding)" ng-show="feeding.supplier === 'B'">
+        <span class="supplier supplierB"><i class="ion-waterdrop"></i></span>
+        <div class="feedingInfo">{{feeding.startTime | date:'HH:mm'}}</div>
+        <div class="feedingInfo volume">{{feeding.volume}}ml</div>
+      </div>
+
+      <div class="feeding" ng-click="editFeeding(feeding)" ng-show="feeding.supplier !== 'B'">
+        <span class="supplier supplier{{feeding.supplier}}">{{feeding.supplier}}</span>
+        <div class="feedingInfo">{{feeding.startTime | date:'HH:mm'}}&nbsp;-&nbsp;{{endTime(feeding) | date:'HH:mm'}}</div>
+        <div class="feedingInfo duration">{{feeding.duration | date:'m':'UTC'}}&nbsp;min</div>
+      </div>
+   </span>
+  </span>
+</div>

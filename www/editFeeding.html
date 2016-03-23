@@ -1,0 +1,44 @@
+<div class="list">
+
+  <div class="popup-buttons row sources">
+    <button class="button {{editedFeedingModel.supplier === 'L' && 'selected' || ''}}" ng-click="editedFeedingModel.supplier = 'L'">L</button>
+    <button class="button {{editedFeedingModel.supplier === 'B' && 'selected' || ''}}" ng-click="editedFeedingModel.supplier = 'B'"><i class="ion-waterdrop"></i></button>
+    <button class="button {{editedFeedingModel.supplier === 'R' && 'selected' || ''}}" ng-click="editedFeedingModel.supplier = 'R'">R</button>
+  </div>
+
+  <span class="row editDateAndTimeOuter">
+    <span class="col" ng-click="editDate()">
+      <div class="datepickerButton">
+        <span class="editDay">{{editedFeedingModel.editDate | date:'EEEE' }}</span><br>
+        <span class="editDate">{{editedFeedingModel.editDate | date:'dd MMM' }}</span>
+        <i class="ion-android-dropdown"></i>
+      </div>
+    </span>
+    <span class="col" ng-click="editTime()">
+      <div class="datepickerButton">
+        <span class="editTime">
+          {{editedFeedingModel.editTime | date:'HH:mm' }}
+        </span>
+        <i class="ion-android-dropdown"></i>
+      </div>
+    </span>
+  </span>
+
+  <hr>
+
+  <div class="newFeedingVolume" ng-show="editedFeedingModel.supplier === 'B'">
+    <div class="header">Volume</div>
+    <div>{{editedFeedingModel.volume}}0 ml</div>
+    <div class="range"><input type="range" min="0" max="30" value="{{editedFeedingModel.volume}}" ng-model="editedFeedingModel.volume"></div>
+  </div>
+  <div class="newFeedingDuration" ng-show="editedFeedingModel.supplier !== 'B'">
+    <div class="header">Duration</div>
+    <div>{{editedFeedingModel.duration}} min</div>
+    <div class="range"><input type="range" min="0" max="30" value="{{editedFeedingModel.duration}}" ng-model="editedFeedingModel.duration"></div>
+  </div>
+
+  <div class="deleteButtonContainer">
+    <button class="button button-block button-round" ng-click="deleteEditedFeeding()">Delete</button>
+  </div>
+
+</div>

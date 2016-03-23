@@ -1,0 +1,18 @@
+<div class="modal">
+  <ion-header-bar>
+    <h1 class="title">Connect devices</h1>
+  </ion-header-bar>
+  <ion-content class="limitedWidth">
+
+    <h2>Add new device</h2>
+    <p class="info">Add a device by sharing your private code.<br/>Your private code is <span class="faded">{{userId()}}</span></p>
+    <button class="button button-round button-block" ng-click="share()">Send code</button>
+
+    <hr>
+
+    <h2>Received a code?</h2>
+    <p class="info">Enter the code to start syncing feedings between your devices.</p>
+    <button class="button button-round button-block" ng-click="enterCodePopup()">Enter code</button>
+
+  </ion-content>
+</div>

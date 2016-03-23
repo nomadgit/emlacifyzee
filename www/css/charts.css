@@ -1,0 +1,132 @@
+.Charts canvas, .Charts .ScatterChart {
+  width: 100% !important;
+  height: auto !important;
+  margin-top: 40px;
+}
+
+.Charts .slider-pager {top: 0px;}
+
+.Charts .SelectWorkaround {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  padding: 0;
+}
+.Charts .SelectWorkaround I {
+  right: 6px;
+}
+.Charts select {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  -webkit-appearance: listbox;
+  background-color: red; 
+  padding: 0 18px;
+  margin: auto 0px;
+}
+
+.Charts strong {
+  color: grey; 
+  font-size: 16px;
+  background-color: white; 
+}
+
+.Charts .leftColor   { font-weight: bold; color: rgba(252,193,8,1);}
+.Charts .rightColor  { font-weight: bold; color: rgba(252,193,8,1);}
+.Charts .bottleColor { font-weight: bold; color: rgba(255,255,255,1);}
+
+.Charts .chartDescText { color: #999;}
+.chartDescHead { text-transform: uppercase; margin-top: 24px; margin-bottom: 8px}
+.chartDescContent .chartDescText { margin-bottom: 10px;}
+.chartDescContent .tag {display: inline-block; width: 50px; margin: 4px 10px; color: #999;}
+.chartDescContent .tag .leftColor, .chartDescContent .tag .bottleColor, .chartDescContent .tag .rightColor {
+  display: block;
+  border-radius: 50%;
+  border: 2px solid;
+  width: 50px;
+  height: 50px;
+  line-height: 46px;
+  text-align: center;
+  color: white;
+  font-weight: normal;
+  font-size: 22px;
+}
+.chartDescContent .tag .quantity {
+  font-size: 16px !important;
+}
+.chartDescContent .tag .leftColor   { border-color: rgba(252,193,8,1);}
+.chartDescContent .tag .rightColor  { border-color: rgba(255,255,255,1);}
+.chartDescContent .tag .bottleColor { border-color: rgba(255,255,255,1);}
+
+.Charts .ScatterChart {
+  height: 300px !important;
+  position: relative;
+  margin: 2em 0em;
+  overflow: hidden;
+  border-top: 1px solid gray;
+}
+.Blobb {
+  position: absolute;
+  background-color: #000;
+  border-radius: 50%;
+  -webkit-transform: translate(-50%, -50%);
+}
+.Blobb.Legend {
+  position: relative; 
+  display: inline-block; 
+  -webkit-transform: none;
+  position: relative;
+  margin: 0 6px;
+}
+.Blobb.LegendMin {
+  width: 5px;
+  height: 5px;
+  top: -3px;
+}
+.Blobb.LegendMax {
+  width: 20px;
+  height: 20px;
+  top: 3px;
+}
+
+.Bars {
+   height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+.Bars .HorizontalBar {
+  border-bottom: 1px dashed gray;
+  height: 12.5%;
+  font-size: 8px;
+  text-align: right;
+  padding: 0 1em 0 0;
+}
+.Bars .Bold {
+  border-bottom-style: solid !important;
+  border-right-style: solid !important;
+}
+.Bars .Hidden {
+  visibility: hidden !important;
+}
+.Bars .VerticalBar {
+  border-right: 1px dashed gray;
+  height: 100%;
+  display: inline-block;
+}
+ 
+@media all and (min-width: 1000px) {
+  .ChartAndTitle {
+    width: 60%;
+    float: left;
+  }
+  .chartDescContent {
+    width: 39%;
+    float: left;
+  }
+  hr {
+    display: none;
+  }
+}

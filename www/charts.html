@@ -1,0 +1,136 @@
+<div class="modal">
+  <ion-header-bar>
+    <h1 class="title">Statistics</h1>
+  </ion-header-bar>
+  <ion-content ng-controller="ChartsController" id="ChartsController" class="Charts">
+
+
+    <ion-slide-box on-slide-changed="slideHasChanged($index)" show-pager="true" active-slide="activeSlide">
+
+  
+      <ion-slide>
+        <div class="ChartAndTitle">
+
+          <div class="ScatterChart">
+            <div class="Bars">
+              <div class="VerticalBar {{bar}}" ng-repeat="bar in scatterTime.vbars track by $index"
+                   style="width: {{scatterVerticalBarWidth()}}" ></div>
+            </div>
+            <div class="Bars">
+              <div class="HorizontalBar"></div>
+              <div class="HorizontalBar Bold">22:00</div>
+              <div class="HorizontalBar">20:00</div>
+              <div class="HorizontalBar Bold">17:00</div>
+              <div class="HorizontalBar">15:00</div>
+              <div class="HorizontalBar Bold">12:00</div>
+              <div class="HorizontalBar">9:00</div>
+              <div class="HorizontalBar Bold">6:30</div>
+            </div>
+            <div class="Blobb" style="width: {{item.size}}; height: {{item.size}}; top: {{item.height}}; left: {{item.day}}" ng-repeat="item in scatter.items"></div>
+          </div>
+
+          <div class="SelectWorkaround">
+            <select ng-model="scatterTime" ng-options="time.name for time in scatterTimes" ng-change="updateSpreadTime(scatterTime)">
+            </select>
+            <i class="ion-android-dropdown"></i>
+          </div>
+
+          <h3>Times of feeding by day</h3>
+          <p class="chartDescText">Shows each feeding by day and time. Follow the horizontal lines to try and figure out what times of day your baby is feeding the most. Today is on the rightmost edge.</p>
+
+        </div>
+
+        <hr>
+        <div class="chartDescContent">
+          <div class="chartDescHead">Legend</div>
+          <div class="chartDescText">
+            Feeding sizes represented as balls. It ranges from <div class="Blobb Legend LegendMin"></div>, which is 0 minutes or 0 ml, to <div class="Blobb Legend LegendMax"></div> which is 30 minutes, 300ml or over.
+          </div>
+        </div>
+      </ion-slide>
+
+      
+      <ion-slide> 
+        <div class="ChartAndTitle">
+          <canvas id="myQuantity"></canvas>
+          <div class="SelectWorkaround">
+            <select ng-model="quantityTime" ng-options="time.name for time in quantityTimes" ng-change="updateQuantityTime(quantityTime)">
+            </select>
+            <i class="ion-android-dropdown"></i>
+          </div>
+          <h3>Feeding quantity</h3>
+          <p class="chartDescText">This chart shows the volume of feedings by source. You see <span class="leftColor">breast-feeding</span> in minutes and <span class="bottleColor">bottle feedings</span> in ml per day.</p>
+        </div>
+        
+        <hr>
+        <div class="chartDescContent">
+          <div class="chartDescHead">Today</div>
+          <span class="tag"><span class="quantity leftColor">{{quantityEndDistro('Breast') | number:0}}</span>direct feeding (min)</span>
+          <span class="tag"><span class="quantity bottleColor">{{quantityEndDistro('Bottle')}}</span>pump feeding (ml)</span>
+        </div>
+        <div class="chartDescContent" ng-show="quantityHasDataAtBegin()">
+          <div class="chartDescHead">{{quantityTime.name}} ago</div>
+          <span class="tag"><span class="quantity leftColor">{{quantityBeginDistro('Breast') | number:0}}</span>breast (min)</span>
+          <span class="tag"><span class="quantity bottleColor">{{quantityBeginDistro('Bottle')}}</span>bottle (ml)</span>
+        </div>
+
+      </ion-slide>
+
+      <ion-slide> 
+        <div class="ChartAndTitle">
+          <canvas id="myHistogram"></canvas>
+          <div class="SelectWorkaround">
+            <select ng-model="histogramTime" ng-options="time.name for time in histogramTimes" ng-change="updateHistogramTime(histogramTime)">
+            </select>
+            <i class="ion-android-dropdown"></i>
+          </div>
+
+          <h3>Feeding times by hour</h3>
+          <p class="chartDescText">This chart shows the accumulated number of feedings per hour for the last {{histogramTime.key}} days. It's interesting.</p>
+        </div>
+
+        <hr>
+        <div class="chartDescContent">
+          <div class="chartDescHead">Most common time</div>
+          <div class="chartDescText">
+            You fed your baby</span><br>
+            <strong>{{histogramPeakTimes()}} times</strong> at
+          </div>
+          <span class="tag"><span class="bottleColor">{{histogramPeakHour()}}</span>o'clock</span>
+        </div>
+      </ion-slide>
+
+      <ion-slide> 
+        <div class="ChartAndTitle">
+          <canvas id="myPercentage"></canvas>
+          <div class="SelectWorkaround">
+            <select ng-model="percentageTime" ng-options="time.name for time in percentageTimes" ng-change="updatePercentageTime(percentageTime)">
+            </select>
+            <i class="ion-android-dropdown"></i>
+          </div>
+          <h3>Feeding trends</h3>
+          <p class="chartDescText">This chart shows the number of feedings by source. You see <span class="leftColor">left breast</span>, <span class="rightColor">right breast</span> and <span class="bottleColor">bottle feedings</span> per day.</p>
+        </div>
+        
+        <hr>
+        <div class="chartDescContent">
+          <div class="chartDescHead">Today</div>
+          <span class="tag"><span class="leftColor">{{percentageEndDistro('L')}}</span>left</span>
+          <span class="tag"><span class="bottleColor">{{percentageEndDistro('B')}}</span>bottle</span>
+          <span class="tag"><span class="rightColor">{{percentageEndDistro('R')}}</span>right</span>
+        </div>
+        <div class="chartDescContent" ng-show="percentageHasDataAtBegin()">
+          <div class="chartDescHead">{{percentageTime.name}} ago</div>
+          <span class="tag"><span class="leftColor">{{percentageBeginDistro('L')}}</span>left</span>
+          <span class="tag"><span class="bottleColor">{{percentageBeginDistro('B')}}</span>bottle</span>
+          <span class="tag"><span class="rightColor">{{percentageBeginDistro('R')}}</span>right</span>
+        </div>
+
+      </ion-slide>
+
+
+    </ion-slide-box>
+
+  </ion-content>
+</div>
+
